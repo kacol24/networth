@@ -62,8 +62,10 @@ class BalanceReport extends Model
             return [
                 'account_id'       => $account->id,
                 'previous_balance' => optional(
-                    $previousReport->accounts->firstWhere('account_id', $account->id)
-                )->balance,
+                    optional(
+                        optional($previousReport)->accounts
+                    )->firstWhere('account_id', $account->id)
+                )->balance ?? 0,
                 'balance'          => optional($this->accounts->firstWhere('account_id', $account->id))->balance,
             ];
         });
