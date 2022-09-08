@@ -29,6 +29,6 @@ class Account extends Model
 
     public function getLastUpdatedAttribute()
     {
-        return optional(BalanceReport::latest('report_date')->first())->report_date ?? '-';
+        return optional(BalanceReport::latest('report_date')->first())->report_date ?? '';
     }
 }
