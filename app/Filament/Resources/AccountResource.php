@@ -50,7 +50,8 @@ class AccountResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
-            ]);
+            ])
+            ->defaultSort('order_column');
     }
 
     public static function getPages(): array
