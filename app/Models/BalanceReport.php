@@ -59,14 +59,18 @@ class BalanceReport extends Model
         $previousReport = $this->previousReport();
 
         return Account::orderBy('order_column')->get()->map(function ($account) use ($previousReport) {
-            return [
-                'account_id'       => $account->id,
-                'previous_balance' => optional(
+            $previousBalance = optional(
                     optional(
                         optional($previousReport)->accounts
                     )->firstWhere('account_id', $account->id)
-                )->balance ?? 0,
-                'balance'          => optional($this->accounts->firstWhere('account_id', $account->id))->balance,
+                )->balance ?? 0;
+
+            return [
+                'account_id'       => $account->id,
+                'previous_balance' => $previousBalance,
+                'balance'          => optional(
+                        $this->accounts->firstWhere('account_id', $account->id)
+                    )->balance ?? $previousBalance,
             ];
         });
     }

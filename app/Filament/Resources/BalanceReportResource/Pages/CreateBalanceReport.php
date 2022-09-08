@@ -20,7 +20,6 @@ class CreateBalanceReport extends CreateRecord
         $balanceReport->accounts()->createMany($accounts->map(function ($account) {
             return [
                 'account_id' => $account->id,
-                'balance'    => 0,
             ];
         }));
 
