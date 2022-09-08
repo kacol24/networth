@@ -24,7 +24,7 @@ class Account extends Model
     {
         $report = BalanceReport::orderBy('report_date', 'desc')->latest()->first();
 
-        return optional($report->accounts->firstWhere('account_id', $this->id))->balance ?? 0;
+        return optional(optional(optional($report)->accounts)->firstWhere('account_id', $this->id))->balance ?? 0;
     }
 
     public function getLastUpdatedAttribute()
