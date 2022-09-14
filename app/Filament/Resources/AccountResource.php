@@ -23,6 +23,7 @@ class AccountResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Toggle::make('is_active'),
                 Forms\Components\TextInput::make('name'),
             ]);
     }
@@ -31,6 +32,7 @@ class AccountResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\BooleanColumn::make('is_active'),
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('balance')
                                          ->label('Current Balance')

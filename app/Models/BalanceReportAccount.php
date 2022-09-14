@@ -11,6 +11,7 @@ class BalanceReportAccount extends Model
         'balance_report_id',
         'account_id',
         'balance',
+        'updated_at',
     ];
 
     public function balanceReport()

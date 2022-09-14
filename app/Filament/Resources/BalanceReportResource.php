@@ -7,8 +7,10 @@ use App\Filament\Resources\BalanceReportResource\RelationManagers;
 use App\Models\Account;
 use App\Models\BalanceReport;
 use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
@@ -30,8 +32,8 @@ class BalanceReportResource extends Resource
             ->schema([
                 Grid::make()
                     ->schema([
-                        Forms\Components\DatePicker::make('report_date')
-                                                   ->format('Y-m-d'),
+                        DatePicker::make('report_date')
+                                  ->format('Y-m-d'),
                     ]),
             ])
             ->columns(1);
@@ -43,8 +45,12 @@ class BalanceReportResource extends Resource
             ->schema([
                 Grid::make()
                     ->schema([
-                        Forms\Components\DatePicker::make('report_date')
-                                                   ->format('Y-m-d'),
+                        DatePicker::make('report_date')
+                                  ->format('Y-m-d'),
+                        Grid::make()
+                            ->schema([
+                                RichEditor::make('description'),
+                            ])->columns(1),
                     ]),
                 Repeater::make('account_list')
                         ->schema([

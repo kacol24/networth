@@ -25,7 +25,7 @@ class BalanceReport extends Model
         return $this->hasMany(BalanceReportAccount::class, 'balance_report_id');
     }
 
-    protected function previousReport()
+    public function previousReport()
     {
         return BalanceReport::latest('report_date')
                             ->where('id', '!=', $this->id)
@@ -58,20 +58,30 @@ class BalanceReport extends Model
     {
         $previousReport = $this->previousReport();
 
-        return Account::orderBy('order_column')->get()->map(function ($account) use ($previousReport) {
-            $previousBalance = optional(
-                    optional(
-                        optional($previousReport)->accounts
-                    )->firstWhere('account_id', $account->id)
-                )->balance ?? 0;
+        return BalanceReportAccount::query()
+                                   ->where('balance_report_id', $this->id)
+                                   ->get()
+                                   ->map(function ($accountReport) use ($previousReport) {
+                                       if (! $accountReport->account->is_active) {
+                                           return false;
+                                       }
 
-            return [
-                'account_id'       => $account->id,
-                'previous_balance' => $previousBalance,
-                'balance'          => optional(
-                        $this->accounts->firstWhere('account_id', $account->id)
-                    )->balance ?? $previousBalance,
-            ];
-        });
+                                       $previousBalance = optional(
+                                               optional(
+                                                   optional($previousReport)->accounts
+                                               )->firstWhere('account_id', $accountReport->account_id)
+                                           )->balance ?? 0;
+
+                                       return [
+                                           'account_id'       => $accountReport->account_id,
+                                           'previous_balance' => $previousBalance,
+                                           'balance'          => optional(
+                                                   $this->accounts->firstWhere('account_id', $accountReport->account_id)
+                                               )->balance ?? $previousBalance,
+                                       ];
+                                   })
+                                   ->reject(function ($row) {
+                                       return $row === false;
+                                   });
     }
 }
